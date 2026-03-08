@@ -1,10 +1,8 @@
 import json
 import psycopg2
+from dotenv import dotenv_values
 
-
-
-with open('logins.json', 'r') as file:
-    LOGINS = json.load(file)
+LOGINS = dotenv_values(".env")
 
 try:
     CONN = psycopg2.connect(

@@ -2,27 +2,14 @@
 
 ## Pour installer le projet
 ```
-python -m venv .venv 
+poetry install
 ```
-Sur Linux
+créer au préalable un `.env` à la racine du projet
 ```
-source .venv/bin/activate
-```
-Sur Windows
-```
-.\venv\Scripts\activate
-```
-```
-pip install -r requirements.txt
+docker compose up -d
 ```
 
 ## Lancer le projet
 ```
-fastapi dev src/main.py
-```
-
-## Déployer le projet 
-```
-docker build -t <image-name> .
-docker run -d --name <container-name> -p 80:80 <image-name>
+poetry run fastapi dev src/main.py
 ```

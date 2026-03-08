@@ -1,8 +1,8 @@
-import database
+from src import database
 from typing import Union
-from config import ORIGINS, TAGS_METADATA, DESCRIPTION
+from src.config import ORIGINS, TAGS_METADATA, DESCRIPTION
 from uuid import uuid4, UUID
-from models.person import PersonIn, PersonOut
+from src.models.person import PersonIn, PersonOut
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
