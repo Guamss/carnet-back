@@ -1,9 +1,10 @@
 from contextlib import asynccontextmanager
 
-from src.database import *
+from src.database import check_db_connexion
 from src.config import ORIGINS, TAGS_METADATA, DESCRIPTION
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.models import *
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

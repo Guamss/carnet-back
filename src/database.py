@@ -8,7 +8,7 @@ database_url = (
     f"postgresql://{config['DB_USER']}:{config['DB_PASSWORD']}@"
     f"{config['DB_ADDRESS']}:{config['DB_PORT']}/{config['DB_NAME']}"
 )
-engine = create_engine(database_url)
+engine = create_engine(database_url, echo=True)
 
 def check_db_connexion():
     try:
