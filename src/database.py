@@ -1,17 +1,22 @@
-import json
-import psycopg2
+from sqlalchemy.exc import OperationalError
+from sqlmodel import create_engine
 from dotenv import dotenv_values
 
-LOGINS = dotenv_values(".env")
+config = dotenv_values(".env")
 
-try:
-    CONN = psycopg2.connect(
-        database=LOGINS["DB_NAME"],
-        user=LOGINS["DB_USER"],
-        password=LOGINS["DB_PASSWORD"],
-        host=LOGINS["DB_ADDRESS"],
-        port=LOGINS["DB_PORT"]
-    )
-except Exception as e:
-    print(f"Erreur avec la BDD : {e}")
+database_url = (
+    f"postgresql://{config['DB_USER']}:{config['DB_PASSWORD']}@"
+    f"{config['DB_ADDRESS']}:{config['DB_PORT']}/{config['DB_NAME']}"
+)
+engine = create_engine(database_url)
 
+def check_db_connexion():
+    try:
+        with engine.connect() as connection:
+            print("Connexion reussie")
+    except OperationalError as e:
+        print(f"Erreur de connexion à la bdd {e}")
+        raise e
+    except Exception as e:
+        print(f"Une erreur inattendue est survenue : {e}")
+        raise e
