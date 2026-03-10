@@ -1,0 +1,28 @@
+erDiagram
+    USER ||--o{ QUOTE : "add"
+    QUOTE ||--o{ QUOTE_LABEL_LINK : "tagged"
+    LABEL ||--o{ QUOTE_LABEL_LINK : "category"
+
+    USER {
+        int id PK
+        string username
+        string password
+    }
+    
+    QUOTE {
+        int id PK
+        string text
+        string said_by
+        datetime date_added
+        int added_by_id FK
+    }
+    
+    LABEL {
+        int id PK
+        string name
+    }
+    
+    QUOTE_LABEL_LINK {
+        int quote_id PK
+        int label_id FK
+    }
