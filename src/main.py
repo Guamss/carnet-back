@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
 
+from sqlmodel import Session
+
 from src.database import check_db_connexion
 from src.config import ORIGINS, TAGS_METADATA, DESCRIPTION
 from fastapi import FastAPI
@@ -33,3 +35,17 @@ app.add_middleware(
 @app.get("/")
 async def hello():
     return print("hello")
+
+@app.post("/quotes", status_code=201)
+async def create_quote(quote: Quote):
+    session = Session(engine)
+    session.add(quote)
+    session.commit()
+    return {quote.id: quote}
+
+@app.post("/labels", status_code=201)
+async def create_label(label: Label):
+    session = Session(engine)
+    session.add(label)
+    session.commit()
+    return {label.id: label}
