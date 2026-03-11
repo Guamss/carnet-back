@@ -1,10 +1,8 @@
 from contextlib import asynccontextmanager
-
-from sqlmodel import Session
-
+from sqlmodel import Session, select
 from src.database import check_db_connexion
 from src.config import ORIGINS, TAGS_METADATA, DESCRIPTION
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from src.models import *
 
@@ -32,20 +30,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-async def hello():
-    return print("hello")
+async def create_in_db(item):
+    with Session(engine) as session :
+        session.add(item)
+        session.commit()
+        session.refresh(item)
+        return item
 
-@app.post("/quotes", status_code=201)
-async def create_quote(quote: Quote):
-    session = Session(engine)
-    session.add(quote)
-    session.commit()
-    return {quote.id: quote}
+async def list_in_db(item, offset):
+    with Session(engine) as session :
+        statement = select(item).offset(offset).limit(25)
+        results = session.exec(statement)
+        return results.all()
+@app.get("/quotes", status_code=200)
+async def get_quotes(offset: int | None = 0):
+    return await list_in_db(Quote,offset)
+@app.post("/quotes", status_code=201, response_model=Quote)
+async def create_quote(quote: QuoteBase):
+    db_quote = Quote.model_validate(quote)
+    return await create_in_db(db_quote)
 
-@app.post("/labels", status_code=201)
-async def create_label(label: Label):
-    session = Session(engine)
-    session.add(label)
-    session.commit()
-    return {label.id: label}
+@app.post("/labels", status_code=201, response_model=Label)
+async def create_label(label: LabelBase):
+    db_label = Label.model_validate(label)
+    return await create_in_db(db_label)
