@@ -22,11 +22,18 @@ class Quote(QuoteBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     labels: list["Label"] = Relationship(back_populates="quotes", link_model=QuoteLabelLink)
 
+class QuoteUpdate(SQLModel):
+    text : str | None = None
+    said_by: str | None = None
+
 class LabelBase(SQLModel):
     name: str
 
 class Label(LabelBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     quotes: list["Quote"] = Relationship(back_populates="labels", link_model=QuoteLabelLink)
+
+class LabelUpdate(SQLModel):
+    name: str | None = None
 
 SQLModel.metadata.create_all(engine)
