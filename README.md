@@ -13,3 +13,8 @@ docker compose up -d
 ```
 poetry run fastapi dev src/main.py
 ```
+## TO DO LIST :
+- [ ] Faire fonctionner le Many-to-Many
+- [ ] Faire l'Authentification et le hash du password
+- [ ] Potentiel refacto du code
+- [ ] Evolutivité (Alembic ?) (Non obligatoire si projet fixe) 
