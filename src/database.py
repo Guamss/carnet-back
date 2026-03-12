@@ -10,6 +10,7 @@ database_url = (
 )
 engine = create_engine(database_url, echo=True)
 
+
 def check_db_connexion():
     try:
         with engine.connect() as connection:
