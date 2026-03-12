@@ -20,6 +20,6 @@ openssl rand -hex 32
 ```
 ## TO DO LIST :
 - [ ] Faire fonctionner le Many-to-Many
-- [ ] Faire l'Authentification et le hash du password
+- [X] Faire l'Authentification et le hash du password
 - [ ] Potentiel refacto du code
 - [ ] Evolutivité (Alembic ?) (Non obligatoire si projet fixe) 

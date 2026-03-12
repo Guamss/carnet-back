@@ -1,8 +1,17 @@
 TAGS_METADATA = [
     {
-        "name": "Persons",
-        "description": "Routes sur la ressource **Person**.",
-    }
+        "name": "Quote",
+        "description": "Routes pour la ressource **Quote**.",
+    },
+    {
+        "name": "Label",
+        "description": "Routes pour la ressource **Label**.",
+    },
+    {
+        "name": "User",
+        "description": "Routes qui concernent l'authentification de la gestion utilisateur.",
+    },
+    
 ]
 
 ORIGINS = [
@@ -10,14 +19,17 @@ ORIGINS = [
 ]
 
 DESCRIPTION = """
-la description de l'API.
+Pour administrer le système de carnet.
 
-## Persons
+## Quote
 
-You will be able to:
+La citation de quelqu'un, c'est un carnet.
 
-* **Créer une personne** (_not implemented_).
-* **Récupérer une personne** (_not implemented_).
-* **Modifier une personne** (_not implemented_).
-* **Supprimer une personne** (_not implemented_).
+## Label
+
+Permet de classifier un carnet.
+
+## User
+
+Un utilisateur.
 """
