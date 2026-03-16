@@ -66,13 +66,13 @@ def filter_quote(quote_id: int):
 
 
 @app.post("/quotes", status_code=201, tags=["Quote"], response_model=Quote)
-def create_quote(quote: QuoteBase):
+def create_quote(quote: QuoteCreate):
     db_quote = Quote.model_validate(quote)
     return create_in_db(db_quote)
 
 
 @app.post("/labels", status_code=201, tags=["Label"], response_model=Label)
-def create_label(label: LabelBase):
+def create_label(label: LabelCreate):
     db_label = Label.model_validate(label)
     return create_in_db(db_label)
 
