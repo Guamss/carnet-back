@@ -1,5 +1,7 @@
 from datetime import datetime, UTC
+
 from sqlmodel import Field, Relationship, SQLModel
+
 from src.database import engine
 
 
@@ -20,6 +22,9 @@ class QuoteLabelLink(SQLModel, table=True):
 
 class Quote(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    text: str
+    said_by: str
+    date_added: datetime = Field(default_factory=lambda: datetime.now(UTC))
     labels: list["Label"] = Relationship(
         back_populates="quotes", link_model=QuoteLabelLink
     )

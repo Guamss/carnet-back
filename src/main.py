@@ -67,7 +67,12 @@ def filter_quote(quote_id: int):
 
 @app.post("/quotes", status_code=201, tags=["Quote"], response_model=Quote)
 def create_quote(quote: QuoteCreate):
-    db_quote = Quote.model_validate(quote)
+    db_quote = Quote(
+        text=quote.text,
+        said_by=quote.said_by,
+        date_added=quote.date_added
+    )
+
     return create_in_db(db_quote)
 
 
