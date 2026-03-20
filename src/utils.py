@@ -8,6 +8,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError
 from pwdlib import PasswordHash
 from sqlmodel import Session, select
+
+from src.models import Quote
 from src.database import engine
 from src.models import User, TokenData
 
@@ -55,6 +57,12 @@ def list_user_by_password_and_username(username: str, password: str):
         statement = select(User).where(User.name == username and User.password == password)
         result = session.exec(statement)
         return result.first()
+
+def list_carnet_by_user(user_id: int):
+    with Session(engine) as session:
+        statement = select(Quote).where(Quote.said_by == user_id)
+        result = session.exec(statement)
+        return result.all()
 
 # username est unique donc ça marche mgl
 def list_user_in_db(username: str):

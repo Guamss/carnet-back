@@ -20,6 +20,7 @@ class UserDAO(BaseModel):
 class UserDTO(BaseModel):
     id: int
     username: str
+    carnets: list[QuoteCreate] = []
 
 
 # ---------------------------------------------------------------------------
@@ -41,13 +42,13 @@ class TokenData(BaseModel):
 
 class QuoteCreate(SQLModel):
     text: str
-    said_by: str
+    said_by: int
     date_added: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class QuoteUpdate(SQLModel):
     text: Optional[str] = None
-    said_by: Optional[str] = None
+    said_by: Optional[int] = None
 
 
 # ---------------------------------------------------------------------------
