@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -64,9 +64,11 @@ def delete_quote(quote_id: int):
 def get_quote_by_id(quote_id: int):
     return list_in_db(Quote, quote_id)
 
+
 @app.get("/quotes/users/{user_id}", tags=["Quote"], status_code=200, response_model=list[Quote])
 def list_quotes_of_user(user_id: int):
     return list_carnet_by_user(user_id)
+
 
 @app.post("/quotes", status_code=201, tags=["Quote"], response_model=Quote)
 def create_quote(quote: QuoteCreate):
@@ -116,7 +118,7 @@ async def login_for_access_token(
 
 
 @app.post("/users", tags=["User"], status_code=201)
-def register_user(user_dao: UserDAO)-> UserDTO:
+def register_user(user_dao: UserDAO) -> UserDTO:
     u = list_user_in_db(user_dao.username)
     if not u:
         created_user = create_in_db(User(name=user_dao.username, hashed_password=get_password_hash(user_dao.password)))
@@ -134,3 +136,22 @@ async def read_users_me(
         current_user: Annotated[User, Depends(get_current_active_user)],
 ) -> UserDTO:
     return UserDTO(id=current_user.id, username=current_user.name, carnets=list_carnet_by_user(current_user.id))
+
+@app.get("/users", tags=["User"])
+async def list_users() -> list[UserDTO]:
+    users = list_all_in_db(User, 0)
+    return list(map(lambda u : UserDTO(id=u.id, username=u.name, carnets=[]), users))
+
+
+@app.get("/users/{user_id}", tags=["User"])
+async def read_user_by_id(
+        user_id: int
+) -> UserDTO:
+    user = list_in_db(User, user_id)
+    if user:
+        return UserDTO(id=user.id, username=user.name, carnets=list_carnet_by_user(user.id))
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="User not found",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
