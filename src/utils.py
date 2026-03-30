@@ -58,9 +58,9 @@ def list_user_by_password_and_username(username: str, password: str):
         result = session.exec(statement)
         return result.first()
 
-def list_carnet_by_user(user_id: int):
+def list_carnet_by_user(username: str):
     with Session(engine) as session:
-        statement = select(Quote).where(Quote.said_by == user_id)
+        statement = select(Quote).where(Quote.said_by == username)
         result = session.exec(statement)
         return result.all()
 

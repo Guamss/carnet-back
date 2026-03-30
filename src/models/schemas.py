@@ -42,22 +42,14 @@ class TokenData(BaseModel):
 
 class QuoteCreate(SQLModel):
     text: str
-    said_by: int
+    said_by: str
+    instead_of: str
+    label: str
     date_added: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class QuoteUpdate(SQLModel):
     text: Optional[str] = None
+    label: Optional[str] = None
+    instead_of: Optional[str] = None
     said_by: Optional[int] = None
-
-
-# ---------------------------------------------------------------------------
-# Label related schemas
-# ---------------------------------------------------------------------------
-
-class LabelCreate(SQLModel):
-    name: str
-
-
-class LabelUpdate(SQLModel):
-    name: Optional[str] = None

@@ -38,23 +38,6 @@ app.add_middleware(
 def get_quotes(offset: int | None = 0):
     return list_all_in_db(Quote, offset)
 
-
-@app.get("/labels", tags=["Label"], status_code=200)
-def get_labels(offset: int | None = 0):
-    return list_all_in_db(Label, offset)
-
-
-@app.get("/labels/{label_id}", tags=["Label"], status_code=200)
-def filter_label(label_id: int):
-    print(list_in_db(Label, label_id))
-    return list_in_db(Label, label_id)
-
-
-@app.delete("/labels/{label_id}", tags=["Label"], status_code=202)
-def delete_label(label_id: int):
-    return delete_in_db(Label, label_id)
-
-
 @app.delete("/quotes/{quote_id}", tags=["Quote"], status_code=202)
 def delete_quote(quote_id: int):
     return delete_in_db(Quote, quote_id)
@@ -67,7 +50,7 @@ def get_quote_by_id(quote_id: int):
 
 @app.get("/quotes/users/{user_id}", tags=["Quote"], status_code=200, response_model=list[Quote])
 def list_quotes_of_user(user_id: int):
-    return list_carnet_by_user(user_id)
+    return list_carnet_by_user(user_id) # marche pas
 
 
 @app.post("/quotes", status_code=201, tags=["Quote"], response_model=Quote)
@@ -75,29 +58,18 @@ def create_quote(quote: QuoteCreate):
     db_quote = Quote(
         text=quote.text,
         said_by=quote.said_by,
+        label=quote.label,
+        instead_of=quote.instead_of,
         date_added=quote.date_added
     )
 
     return create_in_db(db_quote)
 
 
-@app.post("/labels", status_code=201, tags=["Label"], response_model=Label)
-def create_label(label: LabelCreate):
-    db_label = Label.model_validate(label)
-    return create_in_db(db_label)
-
-
 @app.put("/quotes/{quote_id}", status_code=200, tags=["Quote"], response_model=Quote)
 def modify_quote(quote_id: int, quote_data: QuoteUpdate):
     update_data = quote_data.model_dump(exclude_unset=True)
     return update_in_db(Quote, quote_id, update_data)
-
-
-@app.put("/labels/{label_id}", status_code=200, tags=["Label"], response_model=Label)
-def modify_label(label_id: int, label_data: LabelUpdate):
-    update_data = label_data.model_dump(exclude_unset=True)
-    return update_in_db(Label, label_id, update_data)
-
 
 @app.post("/token", tags=["User"])
 async def login_for_access_token(
@@ -135,7 +107,7 @@ def register_user(user_dao: UserDAO) -> UserDTO:
 async def read_users_me(
         current_user: Annotated[User, Depends(get_current_active_user)],
 ) -> UserDTO:
-    return UserDTO(id=current_user.id, username=current_user.name, carnets=list_carnet_by_user(current_user.id))
+    return UserDTO(id=current_user.id, username=current_user.name, carnets=list_carnet_by_user(current_user.name))
 
 @app.get("/users", tags=["User"])
 async def list_users() -> list[UserDTO]:
@@ -149,7 +121,7 @@ async def read_user_by_id(
 ) -> UserDTO:
     user = list_in_db(User, user_id)
     if user:
-        return UserDTO(id=user.id, username=user.name, carnets=list_carnet_by_user(user.id))
+        return UserDTO(id=user.id, username=user.name, carnets=list_carnet_by_user(user.name))
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="User not found",
