@@ -86,7 +86,7 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={"sub": user.name}, expires_delta=access_token_expires
     )
-    return Token(access_token=access_token, token_type="bearer")
+    return Token(access_token=access_token, token_type="bearer", expire_in=int(access_token_expires.total_seconds()))
 
 
 @app.post("/users", tags=["User"], status_code=201)
