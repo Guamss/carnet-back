@@ -13,6 +13,7 @@ from .schemas import (
     TokenData,
     QuoteCreate,
     QuoteUpdate,
+    PasswordUpdate
 )
 
 __all__ = [
@@ -26,4 +27,5 @@ __all__ = [
     "TokenData",
     "QuoteCreate",
     "QuoteUpdate",
+    "PasswordUpdate"
 ]

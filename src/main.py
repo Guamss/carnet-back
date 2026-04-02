@@ -66,9 +66,9 @@ def modify_quote(quote_id: int, quote_data: QuoteUpdate):
     return update_in_db(Quote, quote_id, update_data)
 
 @app.put("/users", status_code=200, tags=["User"])
-def change_pwd(current_user: Annotated[User, Depends(get_current_active_user)], new_pwd: str, confirm_new_pwd: str) -> UserDTO:
-    if new_pwd == confirm_new_pwd:
-        current_user.hashed_password = get_password_hash(new_pwd)
+def change_pwd(current_user: Annotated[User, Depends(get_current_active_user)], pwd_update: PasswordUpdate) -> UserDTO:
+    if pwd_update.new_pwd == pwd_update.confirm_new_pwd:
+        current_user.hashed_password = get_password_hash(pwd_update.new_pwd)
         update_in_db(User, current_user.id, current_user.model_dump())
         return UserDTO(id=current_user.id, username=current_user.name, carnets=list_carnet_by_user(current_user.name))
     else:

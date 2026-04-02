@@ -32,6 +32,9 @@ class Token(BaseModel):
     token_type: str
     expire_in: int
 
+class PasswordUpdate(BaseModel):
+    new_pwd: str
+    confirm_new_pwd: str
 
 class TokenData(BaseModel):
     username: Optional[str] = None
