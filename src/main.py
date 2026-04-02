@@ -47,12 +47,6 @@ def delete_quote(quote_id: int):
 def get_quote_by_id(quote_id: int):
     return list_in_db(Quote, quote_id)
 
-
-@app.get("/quotes/users/{user_id}", tags=["Quote"], status_code=200, response_model=list[Quote])
-def list_quotes_of_user(user_id: int):
-    return list_carnet_by_user(user_id) # marche pas
-
-
 @app.post("/quotes", status_code=201, tags=["Quote"], response_model=Quote)
 def create_quote(quote: QuoteCreate):
     db_quote = Quote(
@@ -71,6 +65,18 @@ def modify_quote(quote_id: int, quote_data: QuoteUpdate):
     update_data = quote_data.model_dump(exclude_unset=True)
     return update_in_db(Quote, quote_id, update_data)
 
+@app.put("/users", status_code=200, tags=["User"])
+def change_pwd(current_user: Annotated[User, Depends(get_current_active_user)], new_pwd: str, confirm_new_pwd: str) -> UserDTO:
+    if new_pwd == confirm_new_pwd:
+        current_user.hashed_password = get_password_hash(new_pwd)
+        update_in_db(User, current_user.id, current_user.model_dump())
+        return UserDTO(id=current_user.id, username=current_user.name, carnets=list_carnet_by_user(current_user.name))
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Les mots de passe ne correspondent pas.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 @app.post("/token", tags=["User"])
 async def login_for_access_token(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],

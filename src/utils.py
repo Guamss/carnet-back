@@ -130,6 +130,13 @@ def get_password_hash(password):
     return PASSWORD_HASH.hash(password)
 
 def authenticate_user(username: str, password: str):
-    return list_user_by_password_and_username(username, password)
+    user = list_user_in_db(username)
 
+    if not user:
+        return None
+
+    if not verify_password(password, user.hashed_password):
+        return None
+
+    return user
 
