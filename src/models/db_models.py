@@ -1,4 +1,5 @@
 from datetime import datetime, UTC
+from enum import Enum
 
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -10,9 +11,14 @@ class User(SQLModel, table=True):
     hashed_password: str
     id: int | None = Field(default=None, primary_key=True)
 
+class QuoteType(str, Enum):
+    CITATION = "CITATION"
+    ACTION = "ACTION"
+
 class Quote(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     text: str
+    type: QuoteType = Field(default=QuoteType.CITATION)
     said_by: str | None = Field(default=None, foreign_key="user.name")
     label: str
     instead_of: str

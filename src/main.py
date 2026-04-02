@@ -44,24 +44,31 @@ def delete_quote(quote_id: int):
 
 
 @app.get("/quotes/{quote_id}", tags=["Quote"], status_code=200)
-def get_quote_by_id(quote_id: int):
+def get_quote_by_id(current_user: Annotated[User, Depends(get_current_active_user)], quote_id: int):
     return list_in_db(Quote, quote_id)
 
 @app.post("/quotes", status_code=201, tags=["Quote"], response_model=Quote)
-def create_quote(quote: QuoteCreate):
-    db_quote = Quote(
-        text=quote.text,
-        said_by=quote.said_by,
-        label=quote.label,
-        instead_of=quote.instead_of,
-        date_added=quote.date_added
-    )
-
-    return create_in_db(db_quote)
+def create_quote(current_user: Annotated[User, Depends(get_current_active_user)], quote: QuoteCreate):
+    if quote.type == QUOTE_ACTION or quote.type == QUOTE_CITATION:
+        db_quote = Quote(
+            text=quote.text,
+            said_by=quote.said_by,
+            label=quote.label,
+            type=quote.type,
+            instead_of=quote.instead_of,
+            date_added=quote.date_added
+        )
+        return create_in_db(db_quote)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Le type d'action n'est pas valide",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
 
 @app.put("/quotes/{quote_id}", status_code=200, tags=["Quote"], response_model=Quote)
-def modify_quote(quote_id: int, quote_data: QuoteUpdate):
+def modify_quote(current_user: Annotated[User, Depends(get_current_active_user)], quote_id: int, quote_data: QuoteUpdate):
     update_data = quote_data.model_dump(exclude_unset=True)
     return update_in_db(Quote, quote_id, update_data)
 
@@ -123,6 +130,7 @@ async def list_users() -> list[UserDTO]:
 
 @app.get("/users/{user_id}", tags=["User"])
 async def read_user_by_id(
+        current_user: Annotated[User, Depends(get_current_active_user)],
         user_id: int
 ) -> UserDTO:
     user = list_in_db(User, user_id)

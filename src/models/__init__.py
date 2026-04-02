@@ -2,6 +2,7 @@
 from .db_models import (
     User,
     Quote,
+    QuoteType
 )
 
 # API/request/response schemas and DTOs
@@ -13,6 +14,8 @@ from .schemas import (
     TokenData,
     QuoteCreate,
     QuoteUpdate,
+    QUOTE_ACTION,
+    QUOTE_CITATION,
     PasswordUpdate
 )
 
@@ -27,5 +30,7 @@ __all__ = [
     "TokenData",
     "QuoteCreate",
     "QuoteUpdate",
+    "QUOTE_ACTION",
+    "QUOTE_CITATION",
     "PasswordUpdate"
 ]

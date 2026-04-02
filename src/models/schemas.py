@@ -44,9 +44,13 @@ class TokenData(BaseModel):
 # Quote related schemas
 # ---------------------------------------------------------------------------
 
+QUOTE_CITATION = "CITATION"
+QUOTE_ACTION = "ACTION"
+
 class QuoteCreate(SQLModel):
     text: str
     said_by: str
+    type: str
     instead_of: str
     label: str
     date_added: datetime = Field(default_factory=lambda: datetime.now(UTC))
@@ -55,5 +59,6 @@ class QuoteCreate(SQLModel):
 class QuoteUpdate(SQLModel):
     text: Optional[str] = None
     label: Optional[str] = None
+    type: Optional[str] = None
     instead_of: Optional[str] = None
     said_by: Optional[int] = None
