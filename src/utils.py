@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
@@ -13,8 +14,9 @@ from src.models import Quote
 from src.database import engine
 from src.models import User, TokenData
 
+
 PASSWORD_HASH = PasswordHash.recommended()
-SECRET_KEY = dotenv_values(".env")['SECRET_KEY']
+SECRET_KEY = os.getenv("SECRET_KEY") or dotenv_values(".env")['SECRET_KEY']
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
