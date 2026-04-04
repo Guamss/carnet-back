@@ -43,7 +43,7 @@ def delete_in_db(item, item_id):
 
 def list_all_in_db(item, offset):
     with Session(engine) as session:
-        statement = select(item).offset(offset).limit(25)
+        statement = select(item).offset(offset) ## retire la limite de la db pour l'instant .limit(25)
         results = session.exec(statement)
         return results.all()
 
